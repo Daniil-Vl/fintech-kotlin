@@ -5,7 +5,6 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
 import ru.tbank.dto_1.News
 import java.io.File
-import java.time.LocalDate
 
 class NewsCsvSaver {
 
