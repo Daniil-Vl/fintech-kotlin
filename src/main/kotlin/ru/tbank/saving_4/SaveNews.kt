@@ -1,17 +1,21 @@
 package ru.tbank.saving_4
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.csv.Csv
 import ru.tbank.dto_1.News
-import java.io.FileWriter
-import java.io.PrintWriter
+import java.io.File
+import java.time.LocalDate
 
-fun saveNews(path: String, news: Collection<News>) {
-    val writer = PrintWriter(FileWriter(path), false)
+class NewsCsvSaver {
 
-    writer.println(""""id", "publication_date", "title", "place", "description", "siteUrl", "favorites_count", "comments_count"""")
+    @OptIn(ExperimentalSerializationApi::class)
+    private val csv = Csv { hasHeaderRecord = true }
 
-    news.forEach {
-        writer.println("${it.id}, ${it.publicationDate}, ${it.title}, ${it.place?.title}, ${it.description}, ${it.siteUrl}, ${it.favoritesCount}, ${it.commentsCount}")
+    @OptIn(ExperimentalSerializationApi::class)
+    fun saveNews(path: String, news: List<News>) {
+        val serialized = csv.encodeToString(ListSerializer(News.serializer()), news)
+        File(path).writeText(serialized)
     }
 
-    writer.flush()
 }
