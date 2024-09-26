@@ -3,6 +3,7 @@ package ru.tbank.springapp.controller
 import org.springframework.web.bind.annotation.*
 import ru.tbank.springapp.aspect.Timed
 import ru.tbank.springapp.dto.CityDTO
+import ru.tbank.springapp.exception.ResourceNotFoundException
 import ru.tbank.springapp.service.CityService
 
 @RestController
@@ -19,10 +20,11 @@ class CityController(
             .map { it.toDTO() }
 
     @GetMapping("/{id}")
-    fun getCity(@PathVariable id: String): CityDTO? =
+    fun getCity(@PathVariable id: String): CityDTO =
         cityService
             .findById(id)
             ?.toDTO()
+            ?: throw ResourceNotFoundException("City not found")
 
     @PostMapping
     fun createCity(@RequestBody cityDTO: CityDTO) =
