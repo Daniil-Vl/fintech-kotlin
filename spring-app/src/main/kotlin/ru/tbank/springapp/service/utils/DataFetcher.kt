@@ -1,7 +1,8 @@
 package ru.tbank.springapp.service.utils
 
 import org.slf4j.LoggerFactory
-import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 import ru.tbank.springapp.aspect.Timed
 import ru.tbank.springapp.client.KudagoClient
@@ -15,10 +16,12 @@ private class DataFetcher(
     private val client: KudagoClient,
     private val categoryRepository: Repository<Category>,
     private val cityRepository: Repository<City>
-) : CommandLineRunner {
+) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
+    @Timed
+    @EventListener(ApplicationReadyEvent::class)
     fun fetchData() {
         logger.info("Fetching data from Kudago API...")
 
@@ -39,11 +42,6 @@ private class DataFetcher(
         }
 
         logger.info("Fetched data successfully saved")
-    }
-
-    @Timed
-    override fun run(vararg args: String?) {
-        fetchData()
     }
 
 }
