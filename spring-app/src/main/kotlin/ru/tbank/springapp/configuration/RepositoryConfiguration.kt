@@ -11,9 +11,9 @@ import ru.tbank.springapp.model.City
 class RepositoryConfiguration {
 
     @Bean
-    fun categoryRepository(): Repository<Category> = RepositoryImpl()
+    fun categoryRepository(): Repository<String, Category> = RepositoryImpl()
 
     @Bean
-    fun cityRepository(): Repository<City> = RepositoryImpl()
+    fun cityRepository(): Repository<String, City> = RepositoryImpl()
 
 }

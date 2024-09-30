@@ -8,7 +8,7 @@ import ru.tbank.springapp.service.CityService
 
 @Service
 class CityServiceImpl(
-    private val cityRepository: Repository<City>
+    private val cityRepository: Repository<String, City>
 ) : CityService {
 
     private val logger = LoggerFactory.getLogger(this::class.java)

@@ -1,13 +1,13 @@
 package ru.tbank.springapp.dao
 
-interface Repository<T> {
-    fun getAll(): List<T>
+interface Repository<K, V> {
+    fun getAll(): List<V>
 
-    fun getById(slug: String): T?
+    fun getById(slug: K): V?
 
-    fun save(slug: String, t: T): T?
+    fun save(slug: K, t: V): V?
 
-    fun update(slug: String, t: T): T?
+    fun update(slug: K, t: V): V?
 
-    fun delete(slug: String): T?
+    fun delete(slug: K): V?
 }

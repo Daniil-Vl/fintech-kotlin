@@ -14,8 +14,8 @@ import ru.tbank.springapp.model.City
 @Service
 private class DataFetcher(
     private val client: KudagoClient,
-    private val categoryRepository: Repository<Category>,
-    private val cityRepository: Repository<City>
+    private val categoryRepository: Repository<String, Category>,
+    private val cityRepository: Repository<String, City>
 ) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)

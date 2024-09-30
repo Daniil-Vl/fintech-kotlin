@@ -8,7 +8,7 @@ import ru.tbank.springapp.service.CategoryService
 
 @Service
 class CategoryServiceImpl(
-    private val categoryRepository: Repository<Category>
+    private val categoryRepository: Repository<String, Category>
 ) : CategoryService {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
