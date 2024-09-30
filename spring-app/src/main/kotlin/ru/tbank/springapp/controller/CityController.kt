@@ -3,7 +3,6 @@ package ru.tbank.springapp.controller
 import org.springframework.web.bind.annotation.*
 import ru.tbank.springapp.aspect.Timed
 import ru.tbank.springapp.dto.CityDTO
-import ru.tbank.springapp.exception.ResourceNotFoundException
 import ru.tbank.springapp.service.CityService
 
 @RestController
