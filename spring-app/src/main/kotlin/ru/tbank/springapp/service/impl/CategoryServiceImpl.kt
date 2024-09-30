@@ -3,6 +3,7 @@ package ru.tbank.springapp.service.impl
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import ru.tbank.springapp.dao.Repository
+import ru.tbank.springapp.exception.ResourceNotFoundException
 import ru.tbank.springapp.model.Category
 import ru.tbank.springapp.service.CategoryService
 
@@ -18,9 +19,10 @@ class CategoryServiceImpl(
         return categoryRepository.getAll()
     }
 
-    override fun findById(slug: String): Category? {
+    override fun findById(slug: String): Category {
         logger.info("Trying to find category by id $slug")
         return categoryRepository.getById(slug)
+            ?: throw ResourceNotFoundException("Category not found")
     }
 
     override fun create(slug: String, name: String): Category? {

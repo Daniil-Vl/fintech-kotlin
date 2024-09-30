@@ -3,7 +3,6 @@ package ru.tbank.springapp.controller
 import org.springframework.web.bind.annotation.*
 import ru.tbank.springapp.aspect.Timed
 import ru.tbank.springapp.dto.CategoryDTO
-import ru.tbank.springapp.exception.ResourceNotFoundException
 import ru.tbank.springapp.service.CategoryService
 
 @RestController
@@ -23,8 +22,7 @@ class CategoryController(
     fun getCategory(@PathVariable id: String): CategoryDTO =
         categoryService
             .findById(id)
-            ?.toDTO()
-            ?: throw ResourceNotFoundException("Category not found")
+            .toDTO()
 
     @PostMapping
     fun createCategory(@RequestBody categoryDTO: CategoryDTO) =

@@ -23,8 +23,7 @@ class CityController(
     fun getCity(@PathVariable id: String): CityDTO =
         cityService
             .findById(id)
-            ?.toDTO()
-            ?: throw ResourceNotFoundException("City not found")
+            .toDTO()
 
     @PostMapping
     fun createCity(@RequestBody cityDTO: CityDTO) =

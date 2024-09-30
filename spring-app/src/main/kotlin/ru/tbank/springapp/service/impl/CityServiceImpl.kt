@@ -3,6 +3,7 @@ package ru.tbank.springapp.service.impl
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import ru.tbank.springapp.dao.Repository
+import ru.tbank.springapp.exception.ResourceNotFoundException
 import ru.tbank.springapp.model.City
 import ru.tbank.springapp.service.CityService
 
@@ -18,9 +19,10 @@ class CityServiceImpl(
         return cityRepository.getAll()
     }
 
-    override fun findById(slug: String): City? {
+    override fun findById(slug: String): City {
         logger.info("Trying to find city by id $slug")
         return cityRepository.getById(slug)
+            ?: throw ResourceNotFoundException("City not found")
     }
 
     override fun create(slug: String, name: String): City? {

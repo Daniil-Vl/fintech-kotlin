@@ -5,7 +5,7 @@ import ru.tbank.springapp.model.City
 interface CityService {
     fun findAll(): List<City>
 
-    fun findById(slug: String): City?
+    fun findById(slug: String): City
 
     fun create(slug: String, name: String): City?
 
