@@ -21,10 +21,10 @@ fun main() {
     val fourThreadsDuration = coroutineExample(pagesNumber, 4)
     val eightThreadsDuration = coroutineExample(pagesNumber, 8)
 
-    println("Requesting $pagesNumber pages of 100 news takes $blockingDuration ms in blocking way")
-    println("Requesting $pagesNumber pages of 100 news takes $twoThreadsDuration ms with coroutines with 2 threads")
-    println("Requesting $pagesNumber pages of 100 news takes $fourThreadsDuration ms with coroutines with 4 threads")
-    println("Requesting $pagesNumber pages of 100 news takes $eightThreadsDuration ms with coroutines with 8 threads")
+    println("Requesting $pagesNumber pages of 100 news takes $blockingDuration in blocking way")
+    println("Requesting $pagesNumber pages of 100 news takes $twoThreadsDuration with coroutines with 2 threads")
+    println("Requesting $pagesNumber pages of 100 news takes $fourThreadsDuration with coroutines with 4 threads")
+    println("Requesting $pagesNumber pages of 100 news takes $eightThreadsDuration with coroutines with 8 threads")
 }
 
 fun blockingExample(pagesNumber: Int): Duration {
