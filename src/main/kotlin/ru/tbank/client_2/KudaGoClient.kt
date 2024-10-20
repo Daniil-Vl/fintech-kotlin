@@ -3,7 +3,6 @@ package ru.tbank.client_2
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -18,8 +17,8 @@ class KudaGoClient {
     private val httpClient: HttpClient = HttpClient()
     private val json: Json = Json { ignoreUnknownKeys = true }
 
-    private fun get(count: Int, page: Int) = runBlocking {
-        httpClient.get(baseUrl) {
+    private suspend fun get(count: Int, page: Int): HttpResponse {
+        return httpClient.get(baseUrl) {
             parameter("page", page.toString())
             parameter("page_size", count)
             parameter("order_by", "publication_date")
@@ -32,27 +31,30 @@ class KudaGoClient {
         }
     }
 
-    fun getNews(count: Int = 100, page: Int = 1): List<News> {
+    suspend fun getNews(count: Int = 10, page: Int = 1): List<News> {
         if (count > 100)
             throw IllegalArgumentException("Cannot load more than 100 news")
 
-        val response: HttpResponse = runCatching { get(count, page) }
-            .onFailure { logger.error(it.message) }
-            .getOrNull()
-            ?: return emptyList()
+        var result: List<News> = emptyList()
 
-        logger.info("Get info from KudaGo API")
-        logger.info("Trying to parse json from KudaGo API...")
+        try {
+            val response: HttpResponse = get(count, page)
 
-        val result: List<News> = runBlocking {
-            json.parseToJsonElement(response.bodyAsText()).jsonObject["results"]
+            logger.info("Get info from KudaGo API")
+            logger.info("Trying to parse json from KudaGo API...")
+
+            result = json
+                .parseToJsonElement(response.bodyAsText()).jsonObject["results"]
                 ?.jsonArray
                 ?.map { it.jsonObject }
                 ?.map { json.decodeFromString(it.toString()) }
                 ?: emptyList()
-        }
 
-        logger.info("Json successfully parsed")
+            logger.info("Json successfully parsed")
+        } catch (exc: Exception) {
+            logger.warn("Failed to gather news from Kudago")
+            logger.warn(exc.message)
+        }
 
         return result
     }
