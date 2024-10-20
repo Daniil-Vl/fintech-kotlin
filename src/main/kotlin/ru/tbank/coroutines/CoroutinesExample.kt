@@ -9,41 +9,48 @@ import ru.tbank.client_2.KudaGoClient
 import ru.tbank.dto_1.News
 import ru.tbank.saving_4.NewsCsvSaver
 import java.nio.file.Path
+import java.time.Duration
+import java.time.Instant
 
 
 fun main() {
     val pagesNumber = 4
 
-    blockingExample(pagesNumber)
-    coroutineExample(pagesNumber, 2)
-    coroutineExample(pagesNumber, 4)
-    coroutineExample(pagesNumber, 8)
+    val blockingDuration = blockingExample(pagesNumber)
+    val twoThreadsDuration = coroutineExample(pagesNumber, 2)
+    val fourThreadsDuration = coroutineExample(pagesNumber, 4)
+    val eightThreadsDuration = coroutineExample(pagesNumber, 8)
+
+    println("Requesting $pagesNumber pages of 100 news takes $blockingDuration ms in blocking way")
+    println("Requesting $pagesNumber pages of 100 news takes $twoThreadsDuration ms with coroutines with 2 threads")
+    println("Requesting $pagesNumber pages of 100 news takes $fourThreadsDuration ms with coroutines with 4 threads")
+    println("Requesting $pagesNumber pages of 100 news takes $eightThreadsDuration ms with coroutines with 8 threads")
 }
 
-fun blockingExample(pagesNumber: Int) {
+fun blockingExample(pagesNumber: Int): Duration {
     val client = KudaGoClient()
     val saver = NewsCsvSaver(Path.of("dump.csv"))
 
-    val startTime = System.nanoTime()
+    val startTime = System.nanoTime() / 1_000_000
 
     for (i in 1..pagesNumber) {
         val res = runBlocking { client.getNews(100, i + 1) }
         saver.saveNews(res)
     }
 
-    val endTime = System.nanoTime()
+    val endTime = System.nanoTime() / 1_000_000
 
-    println("Time for gathering $pagesNumber pages in blocking way is ${endTime - startTime}ns")
+    return Duration.between(Instant.ofEpochMilli(startTime), Instant.ofEpochMilli(endTime))
 }
 
-fun coroutineExample(pagesNumber: Int, threadsNumber: Int) {
+fun coroutineExample(pagesNumber: Int, threadsNumber: Int): Duration {
     val threadPoolContext = newFixedThreadPoolContext(threadsNumber, "coroutine-pool")
 
     val channel = Channel<List<News>>()
     val newsProducer = NewsProducer()
     val newsConsumer = NewsConsumer(Path.of("dump.csv"))
 
-    val startTime = System.nanoTime()
+    val startTime = System.nanoTime() / 1_000_000
 
     runBlocking {
         launch {
@@ -61,8 +68,8 @@ fun coroutineExample(pagesNumber: Int, threadsNumber: Int) {
         channel.close()
     }
 
-    val endTime = System.nanoTime()
+    val endTime = System.nanoTime() / 1_000_000
 
-    println("Time for gathering $pagesNumber pages with $threadsNumber threads with coroutines is ${endTime - startTime}ns")
+    return Duration.between(Instant.ofEpochMilli(startTime), Instant.ofEpochMilli(endTime))
 }
 
