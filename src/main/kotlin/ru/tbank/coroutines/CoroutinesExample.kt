@@ -27,7 +27,7 @@ fun blockingExample(pagesNumber: Int) {
     val startTime = System.nanoTime()
 
     for (i in 1..pagesNumber) {
-        val res = runBlocking { client.getNews(10, i + 1) }
+        val res = runBlocking { client.getNews(100, i + 1) }
         saver.saveNews(res)
     }
 
@@ -53,7 +53,7 @@ fun coroutineExample(pagesNumber: Int, threadsNumber: Int) {
         coroutineScope {
             repeat(pagesNumber) {
                 launch(threadPoolContext) {
-                    newsProducer.getNews(10, it + 1, channel)
+                    newsProducer.getNews(100, it + 1, channel)
                 }
             }
         }
