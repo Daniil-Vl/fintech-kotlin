@@ -38,7 +38,7 @@ class KudaGoClient {
         var result: List<News> = emptyList()
 
         try {
-            val response: HttpResponse = get(count, page);
+            val response: HttpResponse = get(count, page)
 
             logger.info("Get info from KudaGo API")
             logger.info("Trying to parse json from KudaGo API...")
