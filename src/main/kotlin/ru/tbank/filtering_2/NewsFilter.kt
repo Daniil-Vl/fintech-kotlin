@@ -9,7 +9,7 @@ class NewsFilter {
 
     private val client = KudaGoClient()
 
-    fun getMostRatedNews(count: Int, period: ClosedRange<LocalDate>): List<News> {
+    suspend fun getMostRatedNews(count: Int, period: ClosedRange<LocalDate>): List<News> {
         var pageIndex: Int = 1
         val news: MutableList<News> = ArrayList()
         var currentBatch: List<News> = client.getNews(count = 100, page = pageIndex++)
